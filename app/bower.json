@@ -1,0 +1,17 @@
+{
+  "name": "perfdashboard",
+  "description": "Backelite Dashboard Performance",
+  "version": "1.0",
+  "private": true,
+  "dependencies": {
+    "angular": "1.2.x",
+    "jquery": "1.10.2",
+    "bootstrap": "~3.2.0",
+    "angular-route": "~1.2.x",
+    "angular-resource": "~1.2.x",
+    "angular-animate": "~1.2.x",
+    "metisMenu": "~1.1.1",
+    "moment": "~2.8.3",
+    "eonasdan-bootstrap-datetimepicker": "~3.1.3"
+  }
+}

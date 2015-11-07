@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<script type="text/javascript">
+    function submitLogin () {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (re.test(document.getElementById('login-form-email').value)) {
+            var password = document.getElementById('login-form-temp').value;
+            password = CryptoJS.SHA256(password).toString();
+            document.getElementById('login-form-password').value = password;
+            document.getElementById('login-form').submit();
+        }
+    }
+</script>
+<div style="padding-top: 50px">
+    <form id="login-form" role="form" action="/login" method="post" style="width: 300px; margin: auto; padding: 20px; border: solid 1px #e7e7e7; box-shadow: 0 0 20px #e7e7e7">
+        <h2 style="margin-top: 0; color: #777; font-size: 22px; font-weight: 300">Identifiants</h2>
+        <% if (login != 'undefined') { %>
+        <div class="alert alert-danger alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <% if (login == 'unauthorized') { %>
+            Non autorisé. Email ou mot de passe incorrecte.
+            <% } else if (login == 'error') { %>
+            Oops, une erreur est survenue. Veuillez réessayer.
+            <% } %>
+        </div>
+        <% } %>
+        <input type="email" id="login-form-email" name="email" class="form-control" placeholder="Adresse email" required="" autofocus="" style="height: 45px; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0">
+        <input type="hidden" name="password" id="login-form-password">
+        <input type="password" id="login-form-temp" class="form-control" placeholder="Mot de passe" required="" style="height: 45px; -webkit-border-top-left-radius: 0; border-top-left-radius: 0; -webkit-border-top-right-radius: 0; border-top-right-radius: 0; border-top: none">
+        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="submitLogin();" style="margin-top: 20px">Connexion</button>
+    </form>
+</div>

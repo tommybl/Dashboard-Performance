@@ -1,0 +1,325 @@
+.loading-error {
+    font-size: 15px!important;
+    margin-top: 15px;
+}
+
+.dataTable tbody tr td:not(.dataTables_empty) {
+    cursor:pointer;
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.graph-panel-body {
+    padding: 0px;
+}
+
+.height-250 {
+    height: 250px;
+}
+
+.page-header {
+    margin-top: 10px;
+}
+
+.page-header-config {
+    margin-top: 25px;
+}
+
+.periodPath {
+    font-size: 25px!important;
+}
+
+.periodPath .darkpath {
+    color: #333;
+}
+
+.appfiguresPath,
+.googlePath {
+    font-size: 15px!important;
+    margin-top: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+.appfiguresPath img,
+.googlePath img {
+    width: 34px;
+    height: 34px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.btn-settings-left {
+	margin-right: 0;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.btn-settings-right {
+    margin-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.btn-settings-center {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0;
+}
+
+.menu-settings,
+.menu-period {
+	text-align: center;
+}
+
+.dropdown-menu {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.account-config-button {
+	margin-top: 10px;
+	width: 150px;
+}
+
+#account-logout-button {
+    margin-top: 10px;
+    width: 150px;
+}
+
+#google-view-selector table {
+	text-align: center;
+}
+
+#google-view-selector table,
+#google-view-selector tr {
+	width: 100%;
+}
+
+#google-view-selector td {
+    width: 33%;
+}
+
+#google-view-selector select {
+    width: 100%;
+    height: 34px;
+    font-size: 12px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.center-elts {
+	text-align: center;
+}
+
+.panel-heading {
+	cursor: pointer;
+}
+
+/*.panel-heading[data-mytoggle='visible'] {
+    background-image: url("../img/caret-up.png");
+    background-position: center right;
+    background-repeat: no-repeat;
+}*/
+
+.panel-heading[data-mytoggle='hidden'] {
+    background-image: url("../img/caret-down.png");
+    background-position: center right;
+    background-repeat: no-repeat;
+}
+
+.panel-dashboard .panel-heading {
+    cursor: auto;
+    padding: 0;
+    border-bottom: none;
+    color: white;
+}
+
+.panel-dashboard .panel-heading .row {
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #428bca;
+}
+
+.panel-dashboard .panel-heading .response-main {
+    font-size: 22px;
+    font-weight: bold;
+    padding-left: 0;
+}
+
+.panel-dashboard .panel-heading .response-compare {
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 0;
+    padding-top: 5px;
+}
+
+.panel-footer {
+    font-weight: bold;
+    color: #444;
+}
+
+.panel-footer:hover {
+    font-weight: bold;
+    color: black;
+}
+
+.panel-footer i {
+    margin-right: 8px;
+}
+
+.panel-dashboard .response-green {
+    background-color: #5cb85c!important;
+}
+
+.panel-dashboard .response-red {
+    background-color: #d9534f!important;
+}
+
+.panel-dashboard .response-blue {
+    background-color: #428bca!important;
+}
+
+.panel-dashboard .total-reviews {
+    font-size: 12px;
+    float: right;
+    margin-top: -5px;
+    margin-right: 10px;
+}
+
+.panel-dashboard .pushes-listing {
+    text-align: center;
+    width: 100%;
+    font-weight: bold;
+}
+
+.panel-dashboard .pushes-listing tr:first-child {
+    text-decoration: underline;
+}
+
+.panel-dashboard .pushes-listing tr {
+    height: 25px;
+}
+
+.dashboard-sparkline {
+    width: 100%;
+    height: 100px;
+    background-color: #f5f5f5;
+}
+
+.dashboard-sparkpie {
+    width: 100%;
+    height: 160px;
+    background-color: #f5f5f5;
+}
+
+.no-border-shadow {
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+}
+
+#appfigures-logout-button,
+#google-logout-button,
+#urbanairship-logout-button {
+    margin-bottom: 20px;
+}
+
+.account-view-selector .dd-container,
+.account-view-selector .dd-container-legend {
+    display: inline-block;
+}
+
+.account-view-selector .dd-container-legend {
+    line-height: 50px;
+    vertical-align: top;
+    font-size: 20px;
+}
+
+.account-view-selector .dd-container,
+.account-view-selector .dd-select {
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    border: none;
+}
+
+.account-view-selector a,
+.account-view-selector a:hover {
+    text-decoration: none;
+}
+
+.account-view-selector .dd-select {
+    background: none!important;
+}
+
+.account-view-selector .dd-select:hover {
+    background: #e6e6e6!important;
+}
+
+.account-view-selector .dd-option-image,
+.account-view-selector .dd-selected-image {
+    width: 34px;
+    height: 34px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.account-view-selector .dd-selected-text,
+.account-view-selector .dd-selected-text:hover,
+.account-view-selector .dd-option-text,
+.account-view-selector .dd-option-text:hover {
+    color: black;
+    font-weight: normal;
+    font-size: 12px;
+    margin-bottom: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.account-view-selector .dd-selected-description,
+.account-view-selector .dd-selected-description:hover,
+.account-view-selector .dd-option-description,
+.account-view-selector .dd-option-description:hover {
+    font-weight: normal;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.panel .appReview {
+    margin-top: 15px;
+}
+
+.panel .appReview .reviewTitle {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.panel .appReview .reviewDetails {
+    font-size: 12px;
+    color: #777;
+    border-bottom: solid 1px #ddd;
+    padding-bottom: 2px;
+    margin-bottom: 5px;
+}
+
+.panel .appReview .reviewDetails .reviewAuthor {
+    font-weight: bold;
+}
+
+.panel .appReview .reviewDetails .reviewStars {
+    float: right;
+    margin-top: -20px;
+}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-lg-12">
+        <h1><span class="small periodPath"><i class="fa fa-clock-o"></i> Du <span class="darkpath">{{startDate|dateFormat:'YYYY-MM-DD'}}</span> au <span class="darkpath">{{endDate|dateFormat:'YYYY-MM-DD'}}</span> par <span class="darkpath">{{perfSettings|granularityFormat}}</span></span></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h1 class="page-header page-header-first">Push envoyés et réponses<br>
+            <% if (session.user['ua_authorization'] == undefined) { %>
+            <div class="small loading-error">Le chargement des données Urban Airship a échoué.<br>Connectez-vous à votre compte dans la section configuration.</div>
+            <% } %>
+        </h1>
+    </div>
+</div>
+<% if (session.user['ua_authorization'] != undefined) { %>
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-9 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.ios.sendsTrend=='equal'), 'response-green':(response.ios.sendsTrend=='up'), 'response-red':(response.ios.sendsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-apple fa-2x" ng-show="response.ios.sendsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.sendsLoading==undefined||response.ios.sendsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="sendsIos"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.ios.sendsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.sendsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.sendsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.sendsTrend=='down'"></i>
+                            <span ng-show="response.ios.sendsTrend!='equal'">{{response.ios.sendsCompare}}</span>
+                    </div>
+                </div>
+                <div class="row" ng-class="{'response-blue':(response.android.sendsTrend=='equal'), 'response-green':(response.android.sendsTrend=='up'), 'response-red':(response.android.sendsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-android fa-2x" ng-show="response.android.sendsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.sendsLoading==undefined||response.android.sendsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="sendsAndroid"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.android.sendsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.android.sendsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.android.sendsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.android.sendsTrend=='down'"></i>
+                            <span ng-show="response.android.sendsTrend!='equal'">{{response.android.sendsCompare}}</span>
+                    </div>
+                </div>
+            </div>
+            <a href="#/sends">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-cloud-upload fa-lg"></i>
+                        Push envoyés
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-9 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.ios.directTrend=='equal'), 'response-green':(response.ios.directTrend=='up'), 'response-red':(response.ios.directTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-apple fa-2x" ng-show="response.ios.directLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.directLoading==undefined||response.ios.directLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="directIos"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.ios.directCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.directTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.directTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.directTrend=='down'"></i>
+                            <span ng-show="response.ios.directTrend!='equal'">{{response.ios.directCompare}}</span>
+                    </div>
+                </div>
+                <div class="row" ng-class="{'response-blue':(response.android.directTrend=='equal'), 'response-green':(response.android.directTrend=='up'), 'response-red':(response.android.directTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-android fa-2x" ng-show="response.android.directLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.directLoading==undefined||response.android.directLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="directAndroid"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.android.directCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.android.directTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.android.directTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.android.directTrend=='down'"></i>
+                            <span ng-show="response.android.directTrend!='equal'">{{response.android.directCompare}}</span>
+                    </div>
+                </div>
+            </div>
+            <a href="#/sends">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-cloud-upload fa-lg"></i>
+                        Réponses directes
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-9 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.ios.influencedTrend=='equal'), 'response-green':(response.ios.influencedTrend=='up'), 'response-red':(response.ios.influencedTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-apple fa-2x" ng-show="response.ios.influencedLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.influencedLoading==undefined||response.ios.influencedLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="influencedIos"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.ios.influencedCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.influencedTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.influencedTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.influencedTrend=='down'"></i>
+                            <span ng-show="response.ios.influencedTrend!='equal'">{{response.ios.influencedCompare}}</span>
+                    </div>
+                </div>
+                <div class="row" ng-class="{'response-blue':(response.android.influencedTrend=='equal'), 'response-green':(response.android.influencedTrend=='up'), 'response-red':(response.android.influencedTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-android fa-2x" ng-show="response.android.influencedLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.influencedLoading==undefined||response.android.influencedLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="influencedAndroid"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.android.influencedCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.android.influencedTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.android.influencedTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.android.influencedTrend=='down'"></i>
+                            <span ng-show="response.android.influencedTrend!='equal'">{{response.android.influencedCompare}}</span>
+                    </div>
+                </div>
+            </div>
+            <a href="#/sends">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-cloud-upload fa-lg"></i>
+                        Réponses influencées
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Evolution des push envoyés et réponses <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart1Loading=='undefined'||response.chart1Loading=='process'"></i>
+            </div>
+            <div class="panel-body">
+                <div id="chart1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>

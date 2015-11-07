@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-lg-12">
+        <h1><span class="small periodPath"><i class="fa fa-clock-o"></i> Du <span class="darkpath">{{startDate|dateFormat:'YYYY-MM-DD'}}</span> au <span class="darkpath">{{endDate|dateFormat:'YYYY-MM-DD'}}</span> par <span class="darkpath">{{perfSettings|granularityFormat}}</span></span></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h1 class="page-header page-header-first">Téléchargements<br>
+           <% if (session.user['af_authorization'] == undefined || session.user['af_ios'] == undefined || session.user['af_android'] == undefined) { %>
+            <div class="small loading-error">Le chargement des données App Figures a échoué.<br>Connectez-vous à votre compte dans la section configuration.</div>
+            <% } else { %>
+            <span class="small appfiguresPath"><i class="fa fa-apple fa-lg"></i> &nbsp;&nbsp; {{appfigures.ios.dev}} <i class="fa fa-caret-right"></i> {{appfigures.ios.view}}</span>
+           <span class="small appfiguresPath"><i class="fa fa-android fa-lg"></i> &nbsp;&nbsp; {{appfigures.android.dev}} <i class="fa fa-caret-right"></i> {{appfigures.android.view}}</span>
+           <% } %>
+        </h1>
+    </div>
+</div>
+<% if (session.user['af_authorization'] != undefined && session.user['af_ios'] != undefined && session.user['af_android'] != undefined) { %>
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-9 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.ios.downloadsTrend=='equal'), 'response-green':(response.ios.downloadsTrend=='up'), 'response-red':(response.ios.downloadsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-apple fa-2x" ng-show="response.ios.downloadsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.downloadsLoading==undefined||response.ios.downloadsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="downloadsIos"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.ios.downloadsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.downloadsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.downloadsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.downloadsTrend=='down'"></i>
+                            <span ng-show="response.ios.downloadsTrend!='equal'">{{response.ios.downloadsCompare}}</span>
+                    </div>
+                </div>
+                <div class="row" ng-class="{'response-blue':(response.android.downloadsTrend=='equal'), 'response-green':(response.android.downloadsTrend=='up'), 'response-red':(response.android.downloadsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-android fa-2x" ng-show="response.android.downloadsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.downloadsLoading==undefined||response.android.downloadsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="downloadsAndroid"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.android.downloadsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.android.downloadsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.android.downloadsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.android.downloadsTrend=='down'"></i>
+                            <span ng-show="response.android.downloadsTrend!='equal'">{{response.android.downloadsCompare}}</span>
+                    </div>
+                </div>
+            </div>
+            <a href="#/downloads">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-download fa-lg"></i>
+                        Téléchargements
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Evolution des téléchargements <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart1Loading=='undefined'||response.chart1Loading=='process'"></i>
+            </div>
+            <div class="panel-body">
+                <div id="chart1"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Comparaison des téléchargements <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart2Loading=='undefined'||response.chart2Loading=='process'"></i>
+            </div>
+            <div class="panel-body">
+                <div id="chart2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>

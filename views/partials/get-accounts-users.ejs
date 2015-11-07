@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-xs-12">
+        <h1 class="page-header page-header-config">Comptes client et utilisateurs<br></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Comptes client </i>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped table-bordered table-hover" id="chart1">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Google Analitycs</th>
+                            <th>Compte appfigures</th>
+                            <th>App Figures</th>
+                            <th>Urban Airship</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Utilisateurs </i>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped table-bordered table-hover" id="chart2">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Type</th>
+                            <th>Compte</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% if (session.user.type == 'admin') { %>
+<script type="text/javascript">
+    $.get("http://" + perfDashboardURL + "/admin/get/accounts", function (data) {
+        console.log(data);
+        if (data.code == 'OK') {
+            angular.element(document).injector().invoke(function(DATA_TABLE_DEFAULT_OPTIONS) {
+                var tab = data.datas;
+                var datas = [];
+                for (var k = 0; k < tab.length; k++) {
+                    var res = [tab[k][1], tab[k][3], tab[k][2], tab[k][4], tab[k][5]];
+                    datas.push(res); 
+                }
+                var dataTableOptions = $.extend({},DATA_TABLE_DEFAULT_OPTIONS);
+                dataTableOptions['data'] = datas;
+                $('#chart1').dataTable(dataTableOptions);
+            });
+        }
+    });
+    $.get("http://" + perfDashboardURL + "/admin/get/users", function (data) {
+        console.log(data);
+        if (data.code == 'OK') {
+            angular.element(document).injector().invoke(function(DATA_TABLE_DEFAULT_OPTIONS) {
+                var tab = data.datas;
+                var datas = [];
+                for (var k = 0; k < tab.length; k++) {
+                    var res = [tab[k][0], tab[k][1], tab[k][2]];
+                    datas.push(res); 
+                }
+                var dataTableOptions = $.extend({},DATA_TABLE_DEFAULT_OPTIONS);
+                dataTableOptions['data'] = datas;
+                $('#chart2').dataTable(dataTableOptions);
+            });
+        }
+    });
+</script>
+<% } %>

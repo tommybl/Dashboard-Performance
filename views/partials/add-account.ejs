@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-xs-12">
+        <h1 class="page-header page-header-config">Ajouter un compte client<br></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <% if (session.user.type == 'admin') { %>
+        <div>
+            <form role="form" style="width: 300px">
+            <input type="text" id="account-name-input" class="form-control" placeholder="Nom du compte client"><br>
+            Compte App Figures propre au client?<br><br>
+            <select id="account-has-input" class="form-control" style="width: 150px; cursor: pointer; margin-bottom: 20px">
+                <option value="oui">Oui</option>
+                <option value="non">Non</option>
+            </select>
+            </form>
+            <div id="appfigures-view-selector" class="account-view-selector" style="display: none; margin-bottom: 20px">
+                Configuration avec le compte Backelite<br><br>
+                <div id="appfigures-selector-ios" class="dd-container"></div> <div class="dd-container-legend"><i class="fa fa-apple"></i></div><br>
+                <div id="appfigures-selector-android" class="dd-container"></div> <div class="dd-container-legend"><i class="fa fa-android"></i></div><br>
+            </div>
+            <button id="account-save-button" class="btn btn-default account-config-button">Ajouter</button><br><br>
+            <div id="account-name-error" class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <span>Veuillez entrer un nom de compte client.</span>
+            </div>
+            <div id="new-account-error" class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <span>Un problème est survenu, veuillez réessayer.</span>
+            </div>
+            <div id="new-account-saved" class="alert alert-success alert-dismissible fade in" role="alert" style="display: none">
+                <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <span>Nouveau compte ajouté avec succès.</span>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>
+
+<% if (session.user.type == 'admin') { %>
+<script type="text/javascript">
+    appfigures.getProducts(false);
+    $(document).on('change', '#account-has-input', function (e) {
+        if ($('#account-has-input').val() == 'oui') $('#appfigures-view-selector').hide();
+        else $('#appfigures-view-selector').show();
+    });
+
+    $(document).on('click', '#account-save-button', function (e) {
+        $(this).prop("disabled", true);
+        var account_name = $('#account-name-input').val();
+        var account_has = $('#account-has-input').val();
+        if (account_name == '') return $('#account-name-error').show();
+        var iosData = $('#appfigures-selector-ios').data('ddslick').selectedData;
+        var androidData = $('#appfigures-selector-android').data('ddslick').selectedData;
+        var body = {
+            'account_name': account_name,
+            'account_has': (account_has == 'oui') ? 1 : 0,
+            'af_ios': iosData.value,
+            'af_android': androidData.value
+        };
+        $.post("http://" + perfDashboardURL + "/admin/add/account", body, function (data) {
+            $('#account-save-button').prop("disabled", false);
+            if (data.code == "FAIL") {
+                document.getElementById('new-account-saved').style.display = 'none';
+                document.getElementById('new-account-error').style.display = 'block';
+            }
+            else {
+                document.getElementById('new-account-error').style.display = 'none';
+                document.getElementById('new-account-saved').style.display = 'block';
+            }
+        });
+    });
+</script>
+<% } %>

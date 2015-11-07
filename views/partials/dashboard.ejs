@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-lg-12">
+        <h1><span class="small periodPath"><i class="fa fa-clock-o"></i> Du <span class="darkpath">{{startDate|dateFormat:'YYYY-MM-DD'}}</span> au <span class="darkpath">{{endDate|dateFormat:'YYYY-MM-DD'}}</span> par <span class="darkpath">{{perfSettings|granularityFormat}}</span></span></h1>
+    </div>
+</div>
+<div id="DashboardCtrl" class="row" ng-controller="DashboardCtrl">
+<div class="col-lg-4 col-md-6 col-sm-12 col-xs-12" style="border-right: 1px solid #eee">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Google Analytics<br>
+                <% if (session.user['ga_authorization'] == undefined || session.user['ga_ios'] == undefined || session.user['ga_android'] == undefined) { %>
+                <div class="small loading-error">Le chargement des données Google Analytics a échoué.<br>Connectez-vous à votre compte dans la section configuration.</div>
+                <% } else { %>
+                <span class="small googlePath"><i class="fa fa-apple fa-lg"></i> &nbsp;&nbsp; {{google.ios.account}} <i class="fa fa-caret-right"></i> {{google.ios.property}} <i class="fa fa-caret-right"></i> {{google.ios.view}}</span>
+               <span class="small googlePath"><i class="fa fa-android fa-lg"></i> &nbsp;&nbsp; {{google.android.account}} <i class="fa fa-caret-right"></i> {{google.android.property}} <i class="fa fa-caret-right"></i> {{google.android.view}}</span>
+               <% } %>
+            </h1>
+        </div>
+    </div>
+    <% if (session.user['ga_authorization'] != undefined && session.user['ga_ios'] != undefined && session.user['ga_android'] != undefined) { %>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.uniqueVisitorsTrend=='equal'), 'response-green':(response.ios.uniqueVisitorsTrend=='up'), 'response-red':(response.ios.uniqueVisitorsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.uniqueVisitorsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.uniqueVisitorsLoading==undefined||response.ios.uniqueVisitorsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="uniqueVisitorsIos"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.uniqueVisitorsCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.uniqueVisitorsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.uniqueVisitorsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.uniqueVisitorsTrend=='down'"></i>
+                                <span ng-show="response.ios.uniqueVisitorsTrend!='equal'">{{response.ios.uniqueVisitorsCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.uniqueVisitorsTrend=='equal'), 'response-green':(response.android.uniqueVisitorsTrend=='up'), 'response-red':(response.android.uniqueVisitorsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.uniqueVisitorsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.uniqueVisitorsLoading==undefined||response.android.uniqueVisitorsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="uniqueVisitorsAndroid"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.uniqueVisitorsCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.uniqueVisitorsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.uniqueVisitorsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.uniqueVisitorsTrend=='down'"></i>
+                                <span ng-show="response.android.uniqueVisitorsTrend!='equal'">{{response.android.uniqueVisitorsCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart1" class="dashboard-sparkline"></div>
+                </div>
+                <a href="#/unique-visitors">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart1Loading==undefined||response.chart1Loading=='process'"></i>
+                            <i class="fa fa-users fa-lg" ng-show="response.chart1Loading=='success'"></i>
+                            Visiteurs uniques
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.pageViewsTrend=='equal'), 'response-green':(response.ios.pageViewsTrend=='up'), 'response-red':(response.ios.pageViewsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.pageViewsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.pageViewsLoading==undefined||response.ios.pageViewsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="pageViewsIos"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.pageViewsCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.pageViewsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.pageViewsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.pageViewsTrend=='down'"></i>
+                                <span ng-show="response.ios.pageViewsTrend!='equal'">{{response.ios.pageViewsCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.pageViewsTrend=='equal'), 'response-green':(response.android.pageViewsTrend=='up'), 'response-red':(response.android.pageViewsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.pageViewsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.pageViewsLoading==undefined||response.android.pageViewsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="pageViewsAndroid"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.pageViewsCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.pageViewsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.pageViewsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.pageViewsTrend=='down'"></i>
+                                <span ng-show="response.android.pageViewsTrend!='equal'">{{response.android.pageViewsCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart2" class="dashboard-sparkline"></div>
+                </div>
+                <a href="#/page-views">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart2Loading==undefined||response.chart2Loading=='process'"></i>
+                            <i class="fa fa-eye fa-lg" ng-show="response.chart2Loading=='success'"></i>
+                            Pages vues
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.avgSessionDurationTrend=='equal'), 'response-green':(response.ios.avgSessionDurationTrend=='up'), 'response-red':(response.ios.avgSessionDurationTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.avgSessionDurationLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.avgSessionDurationLoading==undefined||response.ios.avgSessionDurationLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="avgSessionDurationIos"></span>s
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.avgSessionDurationCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.avgSessionDurationTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.avgSessionDurationTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.avgSessionDurationTrend=='down'"></i>
+                                <span ng-show="response.ios.avgSessionDurationTrend!='equal'">{{response.ios.avgSessionDurationCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.avgSessionDurationTrend=='equal'), 'response-green':(response.android.avgSessionDurationTrend=='up'), 'response-red':(response.android.avgSessionDurationTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.avgSessionDurationLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.avgSessionDurationLoading==undefined||response.android.avgSessionDurationLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="avgSessionDurationAndroid"></span>s
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.avgSessionDurationCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.avgSessionDurationTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.avgSessionDurationTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.avgSessionDurationTrend=='down'"></i>
+                                <span ng-show="response.android.avgSessionDurationTrend!='equal'">{{response.android.avgSessionDurationCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart3" class="dashboard-sparkline"></div>
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart3Loading==undefined||response.chart3Loading=='process'"></i>
+                            <i class="fa fa-clock-o fa-lg" ng-show="response.chart3Loading=='success'"></i>
+                            Durée moyenne par session
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.bounceRateTrend=='equal'), 'response-green':(response.ios.bounceRateTrend=='up'), 'response-red':(response.ios.bounceRateTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.bounceRateLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.bounceRateLoading==undefined||response.ios.bounceRateLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="bounceRateIos"></span>%
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.bounceRateCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.bounceRateTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.bounceRateTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.bounceRateTrend=='down'"></i>
+                                <span ng-show="response.ios.bounceRateTrend!='equal'">{{response.ios.bounceRateCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.bounceRateTrend=='equal'), 'response-green':(response.android.bounceRateTrend=='up'), 'response-red':(response.android.bounceRateTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.bounceRateLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.bounceRateLoading==undefined||response.android.bounceRateLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="bounceRateAndroid"></span>%
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.bounceRateCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.bounceRateTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.bounceRateTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.bounceRateTrend=='down'"></i>
+                                <span ng-show="response.android.bounceRateTrend!='equal'">{{response.android.bounceRateCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart4" class="dashboard-sparkline"></div>
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart4Loading==undefined||response.chart4Loading=='process'"></i>
+                            <i class="fa fa-external-link fa-lg" ng-show="response.chart4Loading=='success'"></i>
+                            Taux de rebonds par session
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row response-blue">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.operatingSystemSessionsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.operatingSystemSessionsLoading==undefined||response.ios.operatingSystemSessionsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-10 text-center response-main">
+                                <span ng-show="response.ios.operatingSystemSessions==undefined">Loading...</span>
+                                {{response.ios.operatingSystemSessions}}
+                        </div>
+                    </div>
+                    <div class="row response-blue">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.operatingSystemSessionsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.operatingSystemSessionsLoading==undefined||response.android.operatingSystemSessionsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-10 text-center response-main">
+                                <span ng-show="response.android.operatingSystemSessions==undefined">Loading...</span>
+                                {{response.android.operatingSystemSessions}}
+                        </div>
+                    </div>
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left"> Top OS utilisés</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
+<div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">App Figures<br>
+                <% if (session.user['af_authorization'] == undefined || session.user['af_ios'] == undefined || session.user['af_android'] == undefined) { %>
+                <div class="small loading-error">Le chargement des données App Figures a échoué.<br>Connectez-vous à votre compte dans la section configuration.</div>
+                <% } else { %>
+                <span class="small appfiguresPath"><i class="fa fa-apple fa-lg"></i> &nbsp;&nbsp; {{appfigures.ios.dev}} <i class="fa fa-caret-right"></i> {{appfigures.ios.view}}</span>
+               <span class="small appfiguresPath"><i class="fa fa-android fa-lg"></i> &nbsp;&nbsp; {{appfigures.android.dev}} <i class="fa fa-caret-right"></i> {{appfigures.android.view}}</span>
+               <% } %>
+            </h1>
+        </div>
+    </div>
+    <% if (session.user['af_authorization'] != undefined && session.user['af_ios'] != undefined && session.user['af_android'] != undefined) { %>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.downloadsTrend=='equal'), 'response-green':(response.ios.downloadsTrend=='up'), 'response-red':(response.ios.downloadsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.downloadsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.downloadsLoading==undefined||response.ios.downloadsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="downloadsIos"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.downloadsCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.downloadsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.downloadsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.downloadsTrend=='down'"></i>
+                                <span ng-show="response.ios.downloadsTrend!='equal'">{{response.ios.downloadsCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.downloadsTrend=='equal'), 'response-green':(response.android.downloadsTrend=='up'), 'response-red':(response.android.downloadsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.downloadsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.downloadsLoading==undefined||response.android.downloadsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="downloadsAndroid"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.downloadsCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.downloadsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.downloadsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.downloadsTrend=='down'"></i>
+                                <span ng-show="response.android.downloadsTrend!='equal'">{{response.android.downloadsCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart6" class="dashboard-sparkpie"></div>
+                </div>
+                <a href="#/downloads">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart6Loading==undefined||response.chart6Loading=='process'"></i>
+                            <i class="fa fa-download fa-lg" ng-show="response.chart6Loading=='success'"></i>
+                            Téléchargements
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.ratingsTrend=='equal'), 'response-green':(response.ios.ratingsTrend=='up'), 'response-red':(response.ios.ratingsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.ratingsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.ratingsLoading==undefined||response.ios.ratingsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="ratingsIos"></span>
+                        </div>
+                        <div class="col-xs-2 text-left response-compare">
+                                {{response.ios.ratings}}
+                        </div>
+                        <div class="col-xs-2 text-left response-compare">
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.ratingsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.ratingsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.ratingsTrend=='down'"></i>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.ratingsTrend=='equal'), 'response-green':(response.android.ratingsTrend=='up'), 'response-red':(response.android.ratingsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.ratingsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.ratingsLoading==undefined||response.android.ratingsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="ratingsAndroid"></span>
+                        </div>
+                        <div class="col-xs-2 text-left response-compare">
+                                {{response.android.ratings}}
+                        </div>
+                        <div class="col-xs-2 text-left response-compare">
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.ratingsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.ratingsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.ratingsTrend=='down'"></i>
+                        </div>
+                    </div>
+                </div>
+                <a href="#/ratings">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-star fa-lg"></i>
+                            Notes et avis
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.ranksTrend=='equal'), 'response-green':(response.ios.ranksTrend=='up'), 'response-red':(response.ios.ranksTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.ranksLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.ranksLoading==undefined||response.ios.ranksLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-4 text-center response-compare">
+                            {{response.ios.ranksCategory}}
+                        </div>
+                        <div class="col-xs-3 text-right response-main">
+                            <span id="ranksIos"></span>e
+                        </div>
+                        <div class="col-xs-3 text-left response-compare">
+                                <span ng-show="response.ios.ranksCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.ranksTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.ranksTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.ranksTrend=='down'"></i>
+                                <span ng-show="response.ios.ranksTrend!='equal'">{{response.ios.ranksCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.ranksTrend=='equal'), 'response-green':(response.android.ranksTrend=='up'), 'response-red':(response.android.ranksTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.ranksLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.ranksLoading==undefined||response.android.ranksLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-4 text-center response-compare">
+                            {{response.android.ranksCategory}}
+                        </div>
+                        <div class="col-xs-3 text-right response-main">
+                            <span id="ranksAndroid"></span>e
+                        </div>
+                        <div class="col-xs-3 text-left response-compare">
+                                <span ng-show="response.android.ranksCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.ranksTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.ranksTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.ranksTrend=='down'"></i>
+                                <span ng-show="response.android.ranksTrend!='equal'">{{response.android.ranksCompare}}</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#/ranks">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-trophy fa-lg"></i>
+                            Classements par catégorie
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.ranksAllTrend=='equal'), 'response-green':(response.ios.ranksAllTrend=='up'), 'response-red':(response.ios.ranksAllTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.ranksAllLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.ranksAllLoading==undefined||response.ios.ranksAllLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-4 text-center response-compare">
+                            {{response.ios.ranksAllCategory}}
+                        </div>
+                        <div class="col-xs-3 text-right response-main">
+                            <span id="ranksAllIos"></span>e
+                        </div>
+                        <div class="col-xs-3 text-left response-compare">
+                                <span ng-show="response.ios.ranksAllCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.ranksAllTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.ranksAllTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.ranksAllTrend=='down'"></i>
+                                <span ng-show="response.ios.ranksAllTrend!='equal'">{{response.ios.ranksAllCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.ranksAllTrend=='equal'), 'response-green':(response.android.ranksAllTrend=='up'), 'response-red':(response.android.ranksAllTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.ranksAllLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.ranksAllLoading==undefined||response.android.ranksAllLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-4 text-center response-compare">
+                            {{response.android.ranksAllCategory}}
+                        </div>
+                        <div class="col-xs-3 text-right response-main">
+                            <span id="ranksAllAndroid"></span>e
+                        </div>
+                        <div class="col-xs-3 text-left response-compare">
+                                <span ng-show="response.android.ranksAllCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.ranksAllTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.ranksAllTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.ranksAllTrend=='down'"></i>
+                                <span ng-show="response.android.ranksAllTrend!='equal'">{{response.android.ranksAllCompare}}</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#/ranksAll">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-trophy fa-lg"></i>
+                            Classements généraux
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.updatesTrend=='equal'), 'response-green':(response.ios.updatesTrend=='up'), 'response-red':(response.ios.updatesTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.updatesLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.updatesLoading==undefined||response.ios.updatesLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="updatesIos"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.updatesCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.updatesTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.updatesTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.updatesTrend=='down'"></i>
+                                <span ng-show="response.ios.updatesTrend!='equal'">{{response.ios.updatesCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.updatesTrend=='equal'), 'response-green':(response.android.updatesTrend=='up'), 'response-red':(response.android.updatesTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.updatesLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.updatesLoading==undefined||response.android.updatesLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="updatesAndroid"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.updatesCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.updatesTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.updatesTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.updatesTrend=='down'"></i>
+                                <span ng-show="response.android.updatesTrend!='equal'">{{response.android.updatesCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart8" class="dashboard-sparkpie"></div>
+                </div>
+                <a href="#/updates">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart8Loading==undefined||response.chart8Loading=='process'"></i>
+                            <i class="fa fa-arrow-circle-up fa-lg" ng-show="response.chart8Loading=='success'"></i>
+                            Mises à jour
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.revenueTrend=='equal'), 'response-green':(response.ios.revenueTrend=='up'), 'response-red':(response.ios.revenueTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.revenueLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.revenueLoading==undefined||response.ios.revenueLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="revenueIos"></span>€
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.revenueCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.revenueTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.revenueTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.revenueTrend=='down'"></i>
+                                <span ng-show="response.ios.revenueTrend!='equal'">{{response.ios.revenueCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.revenueTrend=='equal'), 'response-green':(response.android.revenueTrend=='up'), 'response-red':(response.android.revenueTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.revenueLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.revenueLoading==undefined||response.android.revenueLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="revenueAndroid"></span>€
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.revenueCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.revenueTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.revenueTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.revenueTrend=='down'"></i>
+                                <span ng-show="response.android.revenueTrend!='equal'">{{response.android.revenueCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart10" class="dashboard-sparkline"></div>
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart10Loading==undefined||response.chart10Loading=='process'"></i>
+                            <i class="fa fa-euro fa-lg" ng-show="response.chart10Loading=='success'"></i>
+                            Revenues
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
+<div class="col-lg-4 col-md-6 col-sm-12 col-xs-12" style="border-left: 1px solid #eee">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Urban Airship<br>
+                <% if (session.user['ua_authorization'] == undefined) { %>
+                <div class="small loading-error">Le chargement des données Urban Airship a échoué.<br>Connectez-vous à votre compte dans la section configuration.</div>
+                <% } else { %>
+                <div style="padding-bottom: 70px"></div>
+                <% } %>
+               <!-- <span class="small appfiguresPath"><img src="https://s3.amazonaws.com/com.urbanairship.appicons/ttT5rsFrQU24DSd8-i56Kg/icon.JPEG?1416404292"> SNCF TER Mobile - PRD</span> -->
+            </h1>
+        </div>
+    </div>
+    <% if (session.user['ua_authorization'] != undefined) { %>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.sendsTrend=='equal'), 'response-green':(response.ios.sendsTrend=='up'), 'response-red':(response.ios.sendsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.sendsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.sendsLoading==undefined||response.ios.sendsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="sendsIos"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.sendsCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.sendsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.sendsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.sendsTrend=='down'"></i>
+                                <span ng-show="response.ios.sendsTrend!='equal'">{{response.ios.sendsCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.sendsTrend=='equal'), 'response-green':(response.android.sendsTrend=='up'), 'response-red':(response.android.sendsTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.sendsLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.sendsLoading==undefined||response.android.sendsLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="sendsAndroid"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.sendsCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.sendsTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.sendsTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.sendsTrend=='down'"></i>
+                                <span ng-show="response.android.sendsTrend!='equal'">{{response.android.sendsCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart11" class="dashboard-sparkline"></div>
+                </div>
+                <a href="#/sends">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart11Loading==undefined||response.chart11Loading=='process'"></i>
+                            <i class="fa fa-cloud-upload fa-lg" ng-show="response.chart11Loading=='success'"></i>
+                            Push envoyés
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.opensTrend=='equal'), 'response-green':(response.ios.opensTrend=='up'), 'response-red':(response.ios.opensTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.opensLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.opensLoading==undefined||response.ios.opensLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="opensIos"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.opensCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.opensTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.opensTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.opensTrend=='down'"></i>
+                                <span ng-show="response.ios.opensTrend!='equal'">{{response.ios.opensCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.opensTrend=='equal'), 'response-green':(response.android.opensTrend=='up'), 'response-red':(response.android.opensTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.opensLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.opensLoading==undefined||response.android.opensLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="opensAndroid"></span>
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.opensCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.opensTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.opensTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.opensTrend=='down'"></i>
+                                <span ng-show="response.android.opensTrend!='equal'">{{response.android.opensCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart12" class="dashboard-sparkline"></div>
+                </div>
+                <a href="#/opens">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart12Loading==undefined||response.chart12Loading=='process'"></i>
+                            <i class="fa fa-sign-in fa-lg" ng-show="response.chart12Loading=='success'"></i>
+                            Apps ouvertes
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table id="chart14" class="pushes-listing"></table>
+                        </div>
+                    </div>
+                </div>
+                <a href="#/pushes">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart14Loading==undefined||response.chart14Loading=='process'"></i>
+                            <i class="fa fa-list fa-lg" ng-show="response.chart14Loading=='success'"></i>
+                            Derniers push envoyés
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default panel-dashboard" >
+                <div class="panel-heading">
+                    <div class="row" ng-class="{'response-blue':(response.ios.timeinappTrend=='equal'), 'response-green':(response.ios.timeinappTrend=='up'), 'response-red':(response.ios.timeinappTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-apple fa-2x" ng-show="response.ios.timeinappLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.timeinappLoading==undefined||response.ios.timeinappLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="timeinappIos"></span>s
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.ios.timeinappCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.timeinappTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.timeinappTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.timeinappTrend=='down'"></i>
+                                <span ng-show="response.ios.timeinappTrend!='equal'">{{response.ios.timeinappCompare}}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="{'response-blue':(response.android.timeinappTrend=='equal'), 'response-green':(response.android.timeinappTrend=='up'), 'response-red':(response.android.timeinappTrend=='down')}">
+                        <div class="col-xs-2">
+                            <i class="fa fa-android fa-2x" ng-show="response.android.timeinappLoading=='success'"></i>
+                            <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.timeinappLoading==undefined||response.android.timeinappLoading=='process'"></i>
+                        </div>
+                        <div class="col-xs-6 text-right response-main">
+                            <span id="timeinappAndroid"></span>s
+                        </div>
+                        <div class="col-xs-4 text-left response-compare">
+                                <span ng-show="response.android.timeinappCompare==undefined">Loading...</span>
+                                <i class="fa fa-arrow-up fa-lg" ng-show="response.android.timeinappTrend=='up'"></i>
+                                <i class="fa fa-arrow-right fa-lg" ng-show="response.android.timeinappTrend=='equal'"></i>
+                                <i class="fa fa-arrow-down fa-lg" ng-show="response.android.timeinappTrend=='down'"></i>
+                                <span ng-show="response.android.timeinappTrend!='equal'">{{response.android.timeinappCompare}}</span>
+                        </div>
+                    </div>
+                    <div id="chart13" class="dashboard-sparkline"></div>
+                </div>
+                <a href="#/timeinapp">
+                    <div class="panel-footer">
+                        <span class="pull-left">
+                            <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart13Loading==undefined||response.chart13Loading=='process'"></i>
+                            <i class="fa fa-clock-o fa-lg" ng-show="response.chart13Loading=='success'"></i>
+                            Durée dans l'app
+                        </span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
+</div>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-lg-12">
+        <h1><span class="small periodPath"><i class="fa fa-clock-o"></i> Du <span class="darkpath">{{startDate|dateFormat:'YYYY-MM-DD'}}</span> au <span class="darkpath">{{endDate|dateFormat:'YYYY-MM-DD'}}</span> par <span class="darkpath">{{perfSettings|granularityFormat}}</span></span></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h1 class="page-header page-header-first">Apps ouvertes<br>
+            <% if (session.user['ua_authorization'] == undefined) { %>
+            <div class="small loading-error">Le chargement des données Urban Airship a échoué.<br>Connectez-vous à votre compte dans la section configuration.</div>
+            <% } %>
+        </h1>
+    </div>
+</div>
+<% if (session.user['ua_authorization'] != undefined) { %>
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-9 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.ios.opensTrend=='equal'), 'response-green':(response.ios.opensTrend=='up'), 'response-red':(response.ios.opensTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-apple fa-2x" ng-show="response.ios.opensLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.opensLoading==undefined||response.ios.opensLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="opensIos"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.ios.opensCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.opensTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.opensTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.opensTrend=='down'"></i>
+                            <span ng-show="response.ios.opensTrend!='equal'">{{response.ios.opensCompare}}</span>
+                    </div>
+                </div>
+                <div class="row" ng-class="{'response-blue':(response.android.opensTrend=='equal'), 'response-green':(response.android.opensTrend=='up'), 'response-red':(response.android.opensTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-android fa-2x" ng-show="response.android.opensLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.opensLoading==undefined||response.android.opensLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="opensAndroid"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.android.opensCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.android.opensTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.android.opensTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.android.opensTrend=='down'"></i>
+                            <span ng-show="response.android.opensTrend!='equal'">{{response.android.opensCompare}}</span>
+                    </div>
+                </div>
+            </div>
+            <a href="#/opens">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-sign-in fa-lg"></i>
+                        Apps ouvertes
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-9 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.ios.optinsTrend=='equal'), 'response-green':(response.ios.optinsTrend=='up'), 'response-red':(response.ios.optinsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-apple fa-2x" ng-show="response.ios.optinsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.optinsLoading==undefined||response.ios.optinsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="optinsIos"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.ios.optinsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.optinsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.optinsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.optinsTrend=='down'"></i>
+                            <span ng-show="response.ios.optinsTrend!='equal'">{{response.ios.optinsCompare}}</span>
+                    </div>
+                </div>
+                <div class="row" ng-class="{'response-blue':(response.android.optinsTrend=='equal'), 'response-green':(response.android.optinsTrend=='up'), 'response-red':(response.android.optinsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-android fa-2x" ng-show="response.android.optinsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.optinsLoading==undefined||response.android.optinsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="optinsAndroid"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.android.optinsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.android.optinsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.android.optinsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.android.optinsTrend=='down'"></i>
+                            <span ng-show="response.android.optinsTrend!='equal'">{{response.android.optinsCompare}}</span>
+                    </div>
+                </div>
+            </div>
+            <a href="#/opens">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-sign-in fa-lg"></i>
+                        Apps ouvertes opt-in
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-9 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.ios.optoutsTrend=='equal'), 'response-green':(response.ios.optoutsTrend=='up'), 'response-red':(response.ios.optoutsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-apple fa-2x" ng-show="response.ios.optoutsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.optoutsLoading==undefined||response.ios.optoutsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="optoutsIos"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.ios.optoutsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.optoutsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.optoutsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.optoutsTrend=='down'"></i>
+                            <span ng-show="response.ios.optoutsTrend!='equal'">{{response.ios.optoutsCompare}}</span>
+                    </div>
+                </div>
+                <div class="row" ng-class="{'response-blue':(response.android.optoutsTrend=='equal'), 'response-green':(response.android.optoutsTrend=='up'), 'response-red':(response.android.optoutsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-android fa-2x" ng-show="response.android.optoutsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.optoutsLoading==undefined||response.android.optoutsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="optoutsAndroid"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.android.optoutsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.android.optoutsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.android.optoutsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.android.optoutsTrend=='down'"></i>
+                            <span ng-show="response.android.optoutsTrend!='equal'">{{response.android.optoutsCompare}}</span>
+                    </div>
+                </div>
+            </div>
+            <a href="#/opens">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-sign-in fa-lg"></i>
+                        Apps ouvertes opt-out
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Evolution des apps ouvertes <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart1Loading=='undefined'||response.chart1Loading=='process'"></i>
+            </div>
+            <div class="panel-body">
+                <div id="chart1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>

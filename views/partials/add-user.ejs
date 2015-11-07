@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-xs-12">
+        <h1 class="page-header page-header-config">Ajouter un utilisateur<br></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <% if (session.user.type == 'admin') { %>
+        <div>
+            <form role="form" style="width: 300px">
+            <input type="email" id="user-mail-input" class="form-control" placeholder="Email utilisateur"><br>
+            Saisissez un mot de passe<br><br>
+            <input type="password" id="user-psw-input" class="form-control"><br>
+            Saisissez à nouveau le mot de passe<br><br>
+            <input type="password" id="user-pswagain-input" class="form-control"><br>
+            Choisissez le type de l'utilisateur<br><br>
+            <select id="user-type-input" class="form-control" style="cursor: pointer; margin-bottom: 20px">
+                <option value="user">Utilisateur</option>
+                <option value="client">Client</option>
+                <option value="admin">Administrateur</option>
+            </select>
+            Choisissez le compte client associé (configration des connecteurs)<br><br>
+            <select id="user-account-input" class="form-control" style="cursor: pointer; margin-bottom: 20px"></select>
+            </form>
+            <button id="user-save-button" class="btn btn-default account-config-button">Ajouter</button><br><br>
+            <div id="new-user-error" class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <span id="new-user-error-mess"></span>
+            </div>
+            <div id="new-user-saved" class="alert alert-success alert-dismissible fade in" role="alert" style="display: none">
+                <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <span id="new-user-saved-mess"></span>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>
+
+<% if (session.user.type == 'admin') { %>
+<script type="text/javascript">
+    $.get("http://" + perfDashboardURL + "/admin/get/accounts", function (data) {
+        console.log(data);
+        if (data.code == 'OK') {
+            var datas = data.datas;
+            var select = $('#user-account-input');
+            for (var k = 0; k < datas.length; k++) {
+                var o = new Option("option text", "value");
+                var o = new Option(datas[k][1], datas[k][0]);
+                $(o).html(datas[k][1]);
+                select.append(o);
+            }
+        }
+    });
+
+    $(document).on('click', '#user-save-button', function (e) {
+        $(this).prop("disabled", true);
+        var user_mail = $('#user-mail-input').val();
+        var user_psw = $('#user-psw-input').val();
+        var user_pswagain = $('#user-pswagain-input').val();
+        var user_type = $('#user-type-input').val();
+        var user_account = $('#user-account-input').val();
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!re.test(user_mail)) {
+            $('#new-user-error-mess').text('Format email incorrect.');
+            $('#new-user-error').show();
+            return;
+        }
+        if (user_psw.length < 4) {
+            $('#new-user-error-mess').text('Veuillez entrer un mot de passe d\'au moins 4 caractères.');
+            $('#new-user-error').show();
+            return;
+        }
+        if (user_psw != user_pswagain) {
+            $('#new-user-error-mess').text('Les deux mots de passe doivent être identiques.');
+            $('#new-user-error').show();
+            return;
+        }
+        var password = CryptoJS.SHA256(user_psw).toString();
+        var body = {
+            'user_mail': user_mail,
+            'user_psw': password,
+            'user_type': user_type,
+            'user_account': user_account
+        };
+        $.post("http://" + perfDashboardURL + "/admin/add/user", body, function (data) {
+            $('#user-save-button').prop("disabled", false);
+            if (data.code == "FAIL") {
+                $('#new-user-error-mess').html(data.message);
+                $('#new-user-saved').hide();
+                $('#new-user-error').show();
+            }
+            else {
+                $('#new-user-saved-mess').html(data.message);
+                $('#new-user-saved').show();
+                $('#new-user-error').hide();
+            }
+        });
+    });
+</script>
+<% } %>

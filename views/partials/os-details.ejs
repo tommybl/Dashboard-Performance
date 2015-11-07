@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-lg-12">
+        <h1><span class="small periodPath"><i class="fa fa-clock-o"></i> Du <span class="darkpath">{{startDate|dateFormat:'YYYY-MM-DD'}}</span> au <span class="darkpath">{{endDate|dateFormat:'YYYY-MM-DD'}}</span> par <span class="darkpath">{{perfSettings|granularityFormat}}</span></span></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h1 class="page-header page-header-first">Pages vues<br>
+           <% if (session.user['ga_authorization'] == undefined || session.user['ga_ios'] == undefined || session.user['ga_android'] == undefined) { %>
+            <div class="small loading-error">Le chargement des données Google Analytics a échoué.<br>Connectez-vous à votre compte dans la section configuration.</div>
+            <% } else { %>
+            <span class="small googlePath"><i class="fa fa-apple fa-lg"></i> &nbsp;&nbsp; {{google.ios.account}} <i class="fa fa-caret-right"></i> {{google.ios.property}} <i class="fa fa-caret-right"></i> {{google.ios.view}}</span>
+           <span class="small googlePath"><i class="fa fa-android fa-lg"></i> &nbsp;&nbsp; {{google.android.account}} <i class="fa fa-caret-right"></i> {{google.android.property}} <i class="fa fa-caret-right"></i> {{google.android.view}}</span>
+           <% } %>
+         </h1>
+    </div>
+</div>
+<% if (session.user['ga_authorization'] != undefined && session.user['ga_ios'] != undefined && session.user['ga_android'] != undefined) { %>
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-9 col-xs-12">
+        <div class="panel panel-primary panel-dashboard panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-5x" ng-show="response.operatingSystemSessionsLoading=='success'">OS</i><i class="fa fa-spinner fa-spin fa-5x" ng-show="response.operatingSystemSessionsLoading=='undefined'||response.operatingSystemSessionsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge"><span ng-show="response.operatingSystemSessions==undefined">Loading...</span>{{response.operatingSystemSessions}}</div>
+                        <div>OS le plus utilisé</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#/os-details">
+                <div class="panel-footer">
+                    <span class="pull-left">Voir les détails</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Google Charts <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart1Loading=='undefined'||response.chart1Loading=='process'"></i>
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div id="chart1"></div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Google Charts <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart2Loading=='undefined'||response.chart2Loading=='process'"></i>
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div id="chart2"></div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
+<% } %>

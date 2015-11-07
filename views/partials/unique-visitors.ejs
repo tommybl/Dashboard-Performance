@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-lg-12">
+        <h1><span class="small periodPath"><i class="fa fa-clock-o"></i> Du <span class="darkpath">{{startDate|dateFormat:'YYYY-MM-DD'}}</span> au <span class="darkpath">{{endDate|dateFormat:'YYYY-MM-DD'}}</span> par <span class="darkpath">{{perfSettings|granularityFormat}}</span></span></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h1 class="page-header page-header-first">Visiteurs uniques <br>
+           <% if (session.user['ga_authorization'] == undefined || session.user['ga_ios'] == undefined || session.user['ga_android'] == undefined) { %>
+            <div class="small loading-error">Le chargement des données Google Analytics a échoué.<br>Connectez-vous à votre compte dans la section configuration.</div>
+            <% } else { %>
+            <span class="small googlePath"><i class="fa fa-apple fa-lg"></i> &nbsp;&nbsp; {{google.ios.account}} <i class="fa fa-caret-right"></i> {{google.ios.property}} <i class="fa fa-caret-right"></i> {{google.ios.view}}</span>
+           <span class="small googlePath"><i class="fa fa-android fa-lg"></i> &nbsp;&nbsp; {{google.android.account}} <i class="fa fa-caret-right"></i> {{google.android.property}} <i class="fa fa-caret-right"></i> {{google.android.view}}</span>
+           <% } %>
+         </h1>
+    </div>
+</div>
+<% if (session.user['ga_authorization'] != undefined && session.user['ga_ios'] != undefined && session.user['ga_android'] != undefined) { %>
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-9 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.ios.uniqueVisitorsTrend=='equal'), 'response-green':(response.ios.uniqueVisitorsTrend=='up'), 'response-red':(response.ios.uniqueVisitorsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-apple fa-2x" ng-show="response.ios.uniqueVisitorsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.uniqueVisitorsLoading==undefined||response.ios.uniqueVisitorsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="uniqueVisitorsIos"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.ios.uniqueVisitorsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.uniqueVisitorsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.uniqueVisitorsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.uniqueVisitorsTrend=='down'"></i>
+                            <span ng-show="response.ios.uniqueVisitorsTrend!='equal'">{{response.ios.uniqueVisitorsCompare}}</span>
+                    </div>
+                </div>
+                <div class="row" ng-class="{'response-blue':(response.android.uniqueVisitorsTrend=='equal'), 'response-green':(response.android.uniqueVisitorsTrend=='up'), 'response-red':(response.android.uniqueVisitorsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-android fa-2x" ng-show="response.android.uniqueVisitorsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.uniqueVisitorsLoading==undefined||response.android.uniqueVisitorsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="uniqueVisitorsAndroid"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            <span ng-show="response.android.uniqueVisitorsCompare==undefined">Loading...</span>
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.android.uniqueVisitorsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.android.uniqueVisitorsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.android.uniqueVisitorsTrend=='down'"></i>
+                            {{response.android.uniqueVisitorsCompare}}
+                    </div>
+                </div>
+            </div>
+            <a href="#/unique-visitors">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-users fa-lg"></i>
+                        Visiteurs uniques
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Evolution des visiteurs uniques <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart1Loading=='undefined'||response.chart1Loading=='process'"></i>
+            </div>
+            <div class="panel-body">
+                <div id="chart1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Carte géographique iOS <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart2Loading=='undefined'||response.chart2Loading=='process'"></i>
+            </div>
+            <div class="panel-body">
+                <div id="chart2" style="margin: auto"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Carte géographique Android <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart3Loading=='undefined'||response.chart3Loading=='process'"></i>
+            </div>
+            <div class="panel-body">
+                <div id="chart3" style="margin: auto"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>

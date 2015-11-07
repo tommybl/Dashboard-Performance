@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header page-header-config">Google Analytics<br></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <% if (session.user.type == 'client') { %>
+        <div <% if (session.user['ga_authorization'] != undefined) { %> style="display: none" <% } %>><button id="google-login-button" class="btn btn-default account-config-button">Configurer</button></div>
+        <% } %>
+        <div id="google-account-email" <% if (session.user['ga_authorization'] == undefined) { %> style="display: none" <% } %>>Connecté en tant que {{google.email}} <br></div>
+        <% if (session.user.type == 'client') { %>
+        <div><button id="google-logout-button" class="btn btn-default account-config-button" <% if (session.user['ga_authorization'] == undefined) { %> style="display: none" <% } %>>Modifier</button></div>
+        <div id="ga-config-error" class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+            <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <span id="ga-config-error-mess"></span>
+        </div>
+        <div id="ga-config-saved" class="alert alert-success alert-dismissible fade in" role="alert" style="display: none">
+            <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <span id="ga-config-saved-mess"></span>
+        </div>
+        <div id="google-view-selector" class="account-view-selector" style="display: none">
+            <div id="google-selector-ios" class="dd-container"></div> <div class="dd-container-legend"><i class="fa fa-apple"></i></div><br>
+            <div id="google-selector-android" class="dd-container"></div> <div class="dd-container-legend"><i class="fa fa-android"></i></div><br>
+            <button id="google-save-button" class="btn btn-default account-config-button">Valider</button>
+        </div>
+        <% } else if (session.user['ga_authorization'] == undefined || session.user['ga_ios'] == undefined || session.user['ga_android'] == undefined) { %>
+        <div>Connecteur Google Analytics en attente de configuration depuis un compte client.</div>
+        <% } else { %><br><% } %>
+        <div id="ga-config-authorized" <% if (session.user['ga_authorization'] == undefined || session.user['ga_ios'] == undefined || session.user['ga_android'] == undefined) { %> style="display: none" <% } %>>
+            <span class="small appfiguresPath"><i class="fa fa-apple fa-lg"></i> &nbsp;&nbsp; {{google.ios.account}} <i class="fa fa-caret-right"></i> {{google.ios.property}} <i class="fa fa-caret-right"></i> {{google.ios.view}}</span><br>
+            <span class="small appfiguresPath"><i class="fa fa-android fa-lg"></i> &nbsp;&nbsp; {{google.android.account}} <i class="fa fa-caret-right"></i> {{google.android.property}} <i class="fa fa-caret-right"></i> {{google.android.view}}</span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header page-header-config">App Figures<br></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <% if (session.user.type == 'client') { %>
+        <div <% if (session.user['af_authorization'] != undefined || session.user['af_has_account'] == 0) { %> style="display: none" <% } %>><button id="appfigures-login-button" class="btn btn-default account-config-button">Configurer</button></div>
+        <% } %>
+        <div id="appfigures-account-email" <% if (session.user['af_authorization'] == undefined) { %> style="display: none" <% } %>>Connecté en tant que {{appfigures.email}} <br></div>
+        <% if (session.user.type == 'client') { %>
+        <div><button id="appfigures-logout-button" class="btn btn-default account-config-button" <% if (session.user['af_authorization'] == undefined || session.user['af_has_account'] == 0) { %> style="display: none" <% } %>>Modifier</button></div>
+        <div id="af-config-error" class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+            <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <span id="af-config-error-mess"></span>
+        </div>
+        <div id="af-config-saved" class="alert alert-success alert-dismissible fade in" role="alert" style="display: none">
+            <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <span id="af-config-saved-mess"></span>
+        </div>
+        <div id="appfigures-view-selector" class="account-view-selector" style="display: none">
+            <div id="appfigures-selector-ios" class="dd-container"></div> <div class="dd-container-legend"><i class="fa fa-apple"></i></div><br>
+            <div id="appfigures-selector-android" class="dd-container"></div> <div class="dd-container-legend"><i class="fa fa-android"></i></div><br>
+            <button id="appfigures-save-button" class="btn btn-default account-config-button">Valider</button>
+        </div>
+        <% } else if (session.user['af_has_account'] == 0) { %>
+        <div>Seul un administrateur Backelite peut configure ce connecteur App Figures.</div>
+        <% } else if (session.user['af_authorization'] == undefined || session.user['af_ios'] == undefined || session.user['af_android'] == undefined) { %>
+        <div>Connecteur App Figures en attente de configuration depuis un compte client.</div>
+        <% } else { %><br><% } %>
+        <div id="af-config-authorized" <% if (session.user['af_authorization'] == undefined || session.user['af_ios'] == undefined || session.user['af_android'] == undefined) { %> style="display: none" <% } %>>
+            <span class="small appfiguresPath"><i class="fa fa-apple fa-lg"></i> &nbsp;&nbsp; <img src="{{appfigures.ios.icon}}"> {{appfigures.ios.dev}} <i class="fa fa-caret-right"></i> {{appfigures.ios.view}}</span><br>
+            <span class="small appfiguresPath"><i class="fa fa-android fa-lg"></i> &nbsp;&nbsp; <img src="{{appfigures.android.icon}}"> {{appfigures.android.dev}} <i class="fa fa-caret-right"></i> {{appfigures.android.view}}</span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header page-header-config">Urban Airship<br></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <% if (session.user.type == 'client') { %>
+        <div id="ua-config-error" class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+            <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <span id="ua-config-error-mess"></span>
+        </div>
+        <div id="ua-config-saved" class="alert alert-success alert-dismissible fade in" role="alert" style="display: none">
+            <button type="button" class="close" onclick="this.parentNode.style.display = 'none'"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <span id="ua-config-saved-mess"></span>
+        </div>
+        <div id="ua-config-unauthorized" <% if (session.user['ua_authorization'] != undefined) { %> style="display: none" <% } %>>
+            <form role="form" style="width: 300px">
+            <input type="text" id="ua-key-input" class="form-control" placeholder="Saisissez votre app key"><br>
+            <input type="text" id="ua-master-input" class="form-control" placeholder="Saisissez votre app master secret"><br>
+            <!--<input type="text" id="ua-account-input" class="form-control" placeholder="Saisissez votre nom d'utilisateur urban airship"><br>
+            <input type="text" id="ua-app-input" class="form-control" placeholder="Saisissez le nom de l'app utilisée"><br>-->
+            <button id="urbanairship-save-button" class="btn btn-default account-config-button" style="margin-bottom: 20px">Valider</button>
+            </form>
+        </div>
+        <% } else if (session.user['ua_authorization'] == undefined) { %>
+        <div>Connecteur Urban Airship en attente de configuration depuis un compte client.</div>
+        <% } %>
+        <div id="ua-config-authorized" <% if (session.user['ua_authorization'] == undefined) { %> style="display: none" <% } %>>
+            Connecté et configuré.<br>
+            <% if (session.user.type == 'client') { %>
+            <button id="urbanairship-logout-button" class="btn btn-default account-config-button">Modifier</button>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<% if (session.user.type == 'client' && session.user['af_authorization'] != undefined && (session.user['af_ios'] == undefined || session.user['af_android'] == undefined)) { %>
+<script>appfigures.getProducts(true);</script>
+<% } %>
+<% if (session.user.type == 'client' && session.user['ga_authorization'] != undefined && (session.user['ga_ios'] == undefined || session.user['ga_android'] == undefined)) { %>
+<script>googleAnalytics.getProducts();</script>
+<% } %>

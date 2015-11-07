@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-lg-12">
+        <h1><span class="small periodPath"><i class="fa fa-clock-o"></i> Du <span class="darkpath">{{startDate|dateFormat:'YYYY-MM-DD'}}</span> au <span class="darkpath">{{endDate|dateFormat:'YYYY-MM-DD'}}</span> par <span class="darkpath">{{perfSettings|granularityFormat}}</span></span></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h1 class="page-header page-header-first">Notes et avis<br>
+           <% if (session.user['af_authorization'] == undefined || session.user['af_ios'] == undefined || session.user['af_android'] == undefined) { %>
+            <div class="small loading-error">Le chargement des données App Figures a échoué.<br>Connectez-vous à votre compte dans la section configuration.</div>
+            <% } else { %>
+            <span class="small appfiguresPath"><i class="fa fa-apple fa-lg"></i> &nbsp;&nbsp; {{appfigures.ios.dev}} <i class="fa fa-caret-right"></i> {{appfigures.ios.view}}</span>
+           <span class="small appfiguresPath"><i class="fa fa-android fa-lg"></i> &nbsp;&nbsp; {{appfigures.android.dev}} <i class="fa fa-caret-right"></i> {{appfigures.android.view}}</span>
+           <% } %>
+        </h1>
+    </div>
+</div>
+<% if (session.user['af_authorization'] != undefined && session.user['af_ios'] != undefined && session.user['af_android'] != undefined) { %>
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.ios.ratingsTrend=='equal'), 'response-green':(response.ios.ratingsTrend=='up'), 'response-red':(response.ios.ratingsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-apple fa-2x" ng-show="response.ios.ratingsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.ios.ratingsLoading==undefined||response.ios.ratingsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="ratingsIos"></span><br><span class="total-reviews">{{response.ios.ratingsTotal}} reviews</span>
+                    </div>
+                    <div class="col-xs-2 text-left response-compare">
+                            {{response.ios.ratings}}
+                    </div>
+                    <div class="col-xs-2 text-left response-compare">
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.ios.ratingsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.ios.ratingsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.ios.ratingsTrend=='down'"></i>
+                    </div>
+                </div>
+                <div class="row" style="background: white; color: grey">
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsIos5"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.ios.ratingsAll[4]}}
+                    </div>
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsIos4"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.ios.ratingsAll[3]}}
+                    </div>
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsIos3"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.ios.ratingsAll[2]}}
+                    </div>
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsIos2"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.ios.ratingsAll[1]}}
+                    </div>
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsIos1"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.ios.ratingsAll[0]}}
+                    </div>
+                </div>
+            </div>
+            <a href="#/ratings">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-star fa-lg"></i>
+                        Notes iOS
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <div class="panel panel-default panel-dashboard" >
+            <div class="panel-heading">
+                <div class="row" ng-class="{'response-blue':(response.android.ratingsTrend=='equal'), 'response-green':(response.android.ratingsTrend=='up'), 'response-red':(response.android.ratingsTrend=='down')}">
+                    <div class="col-xs-2">
+                        <i class="fa fa-android fa-2x" ng-show="response.android.ratingsLoading=='success'"></i>
+                        <i class="fa fa-spinner fa-spin fa-2x" ng-show="response.android.ratingsLoading==undefined||response.android.ratingsLoading=='process'"></i>
+                    </div>
+                    <div class="col-xs-6 text-right response-main">
+                        <span id="ratingsAndroid"></span><br><span class="total-reviews">{{response.android.ratingsTotal}} reviews</span>
+                    </div>
+                    <div class="col-xs-2 text-left response-compare">
+                            {{response.android.ratings}}
+                    </div>
+                    <div class="col-xs-2 text-left response-compare">
+                            <i class="fa fa-arrow-up fa-lg" ng-show="response.android.ratingsTrend=='up'"></i>
+                            <i class="fa fa-arrow-right fa-lg" ng-show="response.android.ratingsTrend=='equal'"></i>
+                            <i class="fa fa-arrow-down fa-lg" ng-show="response.android.ratingsTrend=='down'"></i>
+                    </div>
+                </div>
+                <div class="row" style="background: white; color: grey">
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsAnd5"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.android.ratingsAll[4]}}
+                    </div>
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsAnd4"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.android.ratingsAll[3]}}
+                    </div>
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsAnd3"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.android.ratingsAll[2]}}
+                    </div>
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsAnd2"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.android.ratingsAll[1]}}
+                    </div>
+                    <div class="col-xs-8 text-right response-main">
+                        <span id="ratingsAnd1"></span>
+                    </div>
+                    <div class="col-xs-4 text-left response-compare">
+                            {{response.android.ratingsAll[0]}}
+                    </div>
+                </div>
+            </div>
+            <a href="#/ratings">
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <i class="fa fa-star fa-lg"></i>
+                        Notes Android
+                    </span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary no-border-shadow">
+            <div class="panel-heading">
+                Avis utilisateurs <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart1Loading=='undefined'||response.chart1Loading=='process'"></i>
+            </div>
+            <div class="panel-body">
+                <div id="chart1" role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#chart1Ios" aria-controls="chart1Ios" role="tab" data-toggle="tab">Avis iOS</a></li>
+                        <li role="presentation"><a href="#chart1And" aria-controls="chart1And" role="tab" data-toggle="tab">Avis Android</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="chart1Ios"></div>
+                        <div role="tabpanel" class="tab-pane fade" id="chart1And"></div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: 20px 0 30px 0">
+                    <button type="button" class="btn btn-default" onclick="bkPerf.loadMoreReviews('chart1')">
+                        Charger plus d'avis <i class="fa fa-spinner fa-spin fa-lg" ng-show="response.chart1NextLoading=='process'"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#chart1 .nav a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+
+    $('#ratingsIos5').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 5});
+    $('#ratingsIos4').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 4});
+    $('#ratingsIos3').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 3});
+    $('#ratingsIos2').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 2});
+    $('#ratingsIos1').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 1});
+    $('#ratingsAnd5').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 5});
+    $('#ratingsAnd4').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 4});
+    $('#ratingsAnd3').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 3});
+    $('#ratingsAnd2').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 2});
+    $('#ratingsAnd1').rateit({max: 5, readonly: true, starwidth: 24, starheight: 24, value: 1});
+</script>
+<% } %>
